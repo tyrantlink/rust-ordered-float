@@ -23,7 +23,7 @@ num-cmp    = { version = "0.1.0", optional = true }
 num-traits = { version = "0.2.9", default-features = false }
 proptest   = { version = "1.0.0", optional = true }
 rand       = { version = "0.8.3", optional = true, default-features = false }
-rkyv       = { version = "0.7.41", optional = true, default-features = false, features = ["rend"] }
+rkyv       = { version = "0.8.11", optional = true, default-features = false }
 schemars   = { version = "0.8.8", optional = true }
 serde      = { version = "1.0", optional = true, default-features = false }
 speedy     = { version = "0.8.3", optional = true, default-features = false }
@@ -38,7 +38,7 @@ libm     = ["num-traits/libm"]
 serde    = ["dep:serde", "rand?/serde1"]
 randtest = ["rand/std", "rand/std_rng"]
 rkyv     = ["rkyv_32"]
-rkyv_16  = ["dep:rkyv", "rkyv?/size_16"]
-rkyv_32  = ["dep:rkyv", "rkyv?/size_32"]
-rkyv_64  = ["dep:rkyv", "rkyv?/size_64"]
-rkyv_ck  = ["rkyv?/validation"]
+rkyv_16  = ["dep:rkyv", "rkyv?/pointer_width_16"]
+rkyv_32  = ["dep:rkyv", "rkyv?/pointer_width_32"]
+rkyv_64  = ["dep:rkyv", "rkyv?/pointer_width_64"]
+rkyv_ck  = ["rkyv?/bytecheck"]
