@@ -2061,9 +2061,7 @@ mod impl_serde {
     use num_traits::float::FloatCore;
 
     #[cfg(test)]
-    extern crate serde_test;
-    #[cfg(test)]
-    use self::serde_test::{assert_de_tokens_error, assert_tokens, Token};
+    use serde_test::{assert_de_tokens_error, assert_tokens, Token};
 
     impl<T: FloatCore + Serialize> Serialize for OrderedFloat<T> {
         #[inline]
@@ -2217,14 +2215,12 @@ mod impl_rkyv {
     rkyv_eq_ord! { NotNan, f64, rkyv::rend::f64_be }
 
     #[cfg(feature = "rkyv_ck")]
-    use super::FloatIsNan;
-    #[cfg(feature = "rkyv_ck")]
     use rkyv::bytecheck::CheckBytes;
     #[cfg(feature = "rkyv_ck")]
     use rkyv::rancor::Source;
 
     #[cfg(feature = "rkyv_ck")]
-    unsafe impl<C: Fallible + ?Sized, T: FloatCore + CheckBytes<C>> CheckBytes<C> for OrderedFloat<T> {
+    unsafe impl<C: Fallible + ?Sized, T: CheckBytes<C>> CheckBytes<C> for OrderedFloat<T> {
         #[inline]
         unsafe fn check_bytes(value: *const Self, context: &mut C) -> Result<(), C::Error> {
             T::check_bytes(value.cast(), context)
@@ -2232,18 +2228,13 @@ mod impl_rkyv {
     }
 
     #[cfg(feature = "rkyv_ck")]
-    unsafe impl<C: Fallible + ?Sized, T: FloatCore + CheckBytes<C>> CheckBytes<C> for NotNan<T>
+    unsafe impl<C: Fallible + ?Sized, T: CheckBytes<C>> CheckBytes<C> for NotNan<T>
     where
         C::Error: Source,
     {
         #[inline]
         unsafe fn check_bytes(value: *const Self, context: &mut C) -> Result<(), C::Error> {
             T::check_bytes(value.cast(), context)?;
-            // Check that the value is not NaN
-            let float_value = *(value as *const T);
-            if float_value != float_value {
-                rkyv::rancor::fail!(FloatIsNan);
-            }
             Ok(())
         }
     }
